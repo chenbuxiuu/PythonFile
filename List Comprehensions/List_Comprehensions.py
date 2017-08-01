@@ -11,3 +11,5 @@ for k, v in d.items():
 L1 = ['Hello', 'World', 18, 'Apple', None]
 L2 = [s.lower() if isinstance(s,str) else s for s in L1]
 print(L2)
+t=[s for s in '123.456']
+print(t)
