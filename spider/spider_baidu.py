@@ -69,7 +69,7 @@ def get_image(html,page,keyword):
 		try:
 			img=img.replace("thumbURL\":\"","")
 			n=num+(page-1)*30
-			print('正在下载第%s张图片'%n)
+			print('正在下载第%d张图片'%n)
 			# print(img)
 			mlocal=local+str(n)+'.jpg'
 			urllib.request.urlretrieve(img,mlocal,callbackfunc)
