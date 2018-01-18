@@ -46,8 +46,15 @@ def callbackfunc(blocknum, blocksize, totalsize):
      # @totalsize: 远程文件的大小
     percent = 100.0 * blocknum * blocksize / totalsize
     if percent > 100:
-         percent = 100
-    print ("%.2f%%"% percent)
+    	percent = 100
+    if percent<100:
+    	print ("%.2f%%"% percent,end='||||||||||')
+    else:
+    	print ("%.2f%%"% percent)
+
+
+
+
 
 def download_page(url):
 	request = urllib.request.Request(url) 
@@ -81,7 +88,7 @@ def get_image(html,page,keyword):
 try:
 	# url=r'http://tieba.baidu.com/p/2460150866'
 	url1=r'https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord={word}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word={word}&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&cg=girl&pn={pageNum}&rn=30&gsm=1e00000000001e&1490169411926="'
-	mkeyword='jk'
+	mkeyword='穹妹'
 	keyword=urllib.parse.quote(mkeyword,"utf-8")
 	n=0
 	while(n<30*3):
