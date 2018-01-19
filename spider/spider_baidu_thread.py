@@ -4,6 +4,8 @@ import re
 from urllib.request import urlretrieve
 import ssl
 import os,sys
+import threading
+from time import ctime,sleep
 
 
 # headers=r'User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
@@ -44,13 +46,15 @@ def callbackfunc(blocknum, blocksize, totalsize):
      # @blocknum: 已经下载的数据块
      # @blocksize: 数据块的大小
      # @totalsize: 远程文件的大小
+    global count
+    thread = threading.current_thread()
+    n=float(thread.getName())
+    n=int(n)
+    print('正在下载第%d张图片'%n,end=' ')
     percent = 100.0 * blocknum * blocksize / totalsize
     if percent > 100:
     	percent = 100
-    if percent<100:
-    	print ("%.2f%%"% percent,end='||||||||||')
-    else:
-    	print ("%.2f%%"% percent)
+    print('下载进度为%.2f%%'%(percent))
 
 
 
@@ -64,6 +68,12 @@ def download_page(url):
 	# print(data)
 	return data
 
+
+def save_img(img,local,callbackfunc):
+	
+	urllib.request.urlretrieve(img,local,callbackfunc)
+	
+
 def get_image(html,page,keyword):
 	p=re.compile("thumbURL.*?\.jpg")
 	get_img=p.findall(html)
@@ -72,18 +82,25 @@ def get_image(html,page,keyword):
 	mkdir(keyword)
 	local=sys.path[0]+'\\'+keyword+'\\'
 	# print(local)
+	download_threads=[]
 	for img in get_img:
 		try:
 			img=img.replace("thumbURL\":\"","")
 			n=num+(page-1)*30
-			print('正在下载第%d张图片'%n)
+			# print('正在下载第%d张图片'%n)
 			# print(img)
 			mlocal=local+str(n)+'.jpg'
-			urllib.request.urlretrieve(img,mlocal,callbackfunc)
+			# urllib.request.urlretrieve(img,mlocal,callbackfunc)
+			t = threading.Thread(target=save_img, name=str(n),args=(img,mlocal,callbackfunc))
+			download_threads.append(t)
 			num+=1
 		except Exception as e:
 			print (format(e))
 			continue
+
+	for t in download_threads:
+		t.start()
+	t.join()
 
 try:
 	# url=r'http://tieba.baidu.com/p/2460150866'
@@ -91,7 +108,7 @@ try:
 	mkeyword='coser'
 	keyword=urllib.parse.quote(mkeyword,"utf-8")
 	n=0
-	while(n<30*3):
+	while(n<30*1):
 		n+=30
 		url=url1.format(word=keyword,pageNum=str(n))
 		html=download_page(url)
