@@ -50,7 +50,7 @@ def callbackfunc(blocknum, blocksize, totalsize):
     thread = threading.current_thread()
     n=float(thread.getName())
     n=int(n)
-    print('正在下载第%d张图片'%n,end=' ')
+    print('正在下载第%d张图片'%n,end=',')
     percent = 100.0 * blocknum * blocksize / totalsize
     if percent > 100:
     	percent = 100
