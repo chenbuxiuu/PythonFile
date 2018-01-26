@@ -59,8 +59,8 @@ def callbackfunc(blocknum, blocksize, totalsize):
 
 
 
-
-def download_page(url):
+# 打开url
+def open_url(url):
 	request = urllib.request.Request(url) 
 	response = urllib.request.urlopen(request)
 	data = response.read() 
@@ -68,51 +68,58 @@ def download_page(url):
 	# print(data)
 	return data
 
-
-def save_img(img,local,callbackfunc):
+# 保存图片
+def save_img(imgUrl,localPath,callbackfunc):
+	try:
+		urllib.request.urlretrieve(imgUrl,localPath,callbackfunc)
+	except Exception as e:
+		print (format(e))
+		
 	
-	urllib.request.urlretrieve(img,local,callbackfunc)
-	
-
-def get_image(html,page,keyword):
+# 获取指向img的url
+def get_image_url(html):
 	p=re.compile("thumbURL.*?\.jpg")
 	get_img=p.findall(html)
-	# print(repr(html))
-	num=1
-	mkdir(keyword)
-	local=sys.path[0]+'\\'+keyword+'\\'
-	# print(local)
-	download_threads=[]
+	src_img=[]
 	for img in get_img:
-		try:
-			img=img.replace("thumbURL\":\"","")
-			n=num+(page-1)*30
-			# print('正在下载第%d张图片'%n)
-			# print(img)
-			mlocal=local+str(n)+'.jpg'
-			# urllib.request.urlretrieve(img,mlocal,callbackfunc)
-			t = threading.Thread(target=save_img, name=str(n),args=(img,mlocal,callbackfunc))
-			download_threads.append(t)
-			num+=1
-		except Exception as e:
-			print (format(e))
-			continue
-
-	for t in download_threads:
-		t.start()
-	t.join()
+		img=img.replace("thumbURL\":\"","")
+		src_img.append(img)	
+	return src_img		
 
 try:
 	# url=r'http://tieba.baidu.com/p/2460150866'
-	url1=r'https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord={word}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word={word}&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&cg=girl&pn={pageNum}&rn=30&gsm=1e00000000001e&1490169411926="'
-	mkeyword='coser'
-	keyword=urllib.parse.quote(mkeyword,"utf-8")
-	n=0
-	while(n<30*1):
+	origin=r'https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord={word}&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word={word}&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&cg=girl&pn={pageNum}&rn=30&gsm=1e00000000001e&1490169411926="'
+	# 搜索关键字
+	search_word=r'高清白丝'
+	# 关键字编码
+	keyword=urllib.parse.quote(search_word,"utf-8")
+	# 新建文件夹
+	mkdir(search_word)
+	# 文件保存路径
+	local=sys.path[0]+'\\'+search_word+'\\'
+	# 计数
+	n=0 #page
+	r=1 #
+	# 准备线程
+	download_threads=[]
+	# ----------------------
+	while(n<30*3):
 		n+=30
-		url=url1.format(word=keyword,pageNum=str(n))
-		html=download_page(url)
-		get_image(html,n/30,mkeyword)
+		href=origin.format(word=keyword,pageNum=str(n))
+		html=open_url(href)
+		imgUrl=get_image_url(html)
+		
+		for url in imgUrl:
+			path=local+str(r)+'.jpg'
+			t = threading.Thread(target=save_img, name=str(r),args=(url,path,callbackfunc))
+			download_threads.append(t)
+			r+=1
+
+	# 开启线程
+	for t in download_threads:
+		t.start()
+	t.join
+			
 except Exception as e:
 	print (format(e))
 
