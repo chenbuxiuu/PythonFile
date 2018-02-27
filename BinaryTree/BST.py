@@ -1,4 +1,4 @@
-import copy
+
 import random
 class Node:
     def __init__(self,value):
@@ -164,7 +164,7 @@ if __name__ == '__main__':
         item.showNodeInfo()
 
     t.traverse()
-    delt=tree_array[0]
+    delt=tree_array[4]
     print(delt)
     t.delete(delt)
     t.traverse()
