@@ -70,12 +70,19 @@ def login():
 
 def move_mouse(driver):
     while 1:
-        random.seed()
-        x=random.randint(0,100)
-        y=random.randint(0,100)
-        ActionChains(driver).move_by_offset(x,y). perform()
-        time.sleep(50)
-        ActionChains(driver).move_by_offset(0,0). perform()
+        # random.seed()
+        # x=random.randint(0,100)
+        # y=random.randint(0,100)
+        # ActionChains(driver).move_by_offset(100,100). perform()
+        # ActionChains(driver).click().perform()
+        # element=driver.find_element_by_xpath('//tr[@data-uid="a5dfcfb8-d04c-4bfe-9909-c6c0caab3135"]/td[1]')
+        # element.click()
+        # locator = (By.ID, 'indextabstrip')
+        # WebDriverWait(driver, 5, 1).until(EC.presence_of_element_located(locator))
+        # element=driver.find_element_by_xpath('//*[@id="indextabstrip"]/ul/li[3]/span')
+        # element.click()
+        driver.refresh();
+        # ActionChains(driver).move_by_offset(0,0). perform()
 
 
 if __name__ == '__main__':
@@ -83,5 +90,6 @@ if __name__ == '__main__':
         driver=login()
         move_mouse(driver)
     except Exception as e:
-        print ("Exception found in login", format(e))
+        print (format(e))
+        # driver.quit()
     
