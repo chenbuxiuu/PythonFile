@@ -36,11 +36,11 @@ def login():
 
     element=driver.find_element_by_id('uid')
     element.clear()
-    element.send_keys('xhchen5865')
+    element.send_keys('')
 
     element=driver.find_element_by_id('password')
     element.clear()
-    element.send_keys('fh0211005865')
+    element.send_keys('')
 
     element=driver.find_element_by_id('login_button')
     element.click()
