@@ -63,7 +63,7 @@ def delete(driver):
         element=driver.find_element_by_xpath('//div[@name="delete"]')
         element.click()
         # 刷新
-        refresh(driver)
+        # refresh(driver)
     driver.switch_to.default_content()
 
 def clear(driver):
@@ -81,6 +81,9 @@ def clear(driver):
     delete(driver)
     for item in elements:
         item.click()
+        driver.switch_to.frame('folder')
+        refresh(driver)
+        driver.switch_to.default_content()
         delete(driver)
 
     # 清空已删除
